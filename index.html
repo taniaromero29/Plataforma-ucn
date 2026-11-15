@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Plataforma Prácticas UCN - OMZ</title>
+<style>body{font-family:Arial;background:#eef2f7;margin:0}header{background:#0A2A5E;color:white;padding:15px;text-align:center} .card{background:white;max-width:500px;margin:20px auto;padding:20px;border-radius:10px}input{width:95%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:6px}button{background:#1BA96A;color:white;border:none;padding:12px;width:100%;border-radius:6px;font-size:16px} .vac{border:1px solid #ddd;padding:12px;border-radius:8px;margin:10px 0}</style>
+</head>
+<body>
+<header><h2>UCN • PLATAFORMA DE PRÁCTICAS</h2><p>10 de noviembre de 2026</p></header>
+
+<div class="card">
+<h2>Registro de Estudiante</h2>
+<input id="nombre" placeholder="Nombre completo">
+<input id="correo" placeholder="Correo institucional">
+<input id="carrera" placeholder="Carrera - Ej: Ingeniería de Software">
+<input id="clave" type="password" placeholder="Contraseña">
+<button onclick="registrar()">REGISTRARME</button>
+<p id="msg1"></p>
+</div>
+
+<div class="card">
+<h2>Vacantes disponibles - OMZ</h2>
+<div class="vac"><b>OMZ</b><br>Practicante Desarrollo - Medellín • Presencial<br><button onclick="postular('Desarrollo')">Postularse</button></div>
+<div class="vac"><b>OMZ</b><br>Practicante QA / Pruebas - Bello • Híbrido<br><button onclick="postular('QA')">Postularse</button></div>
+<div class="vac"><b>OMZ</b><br>Practicante Frontend React - Medellín • Remoto<br><button onclick="postular('Frontend')">Postularse</button></div>
+<p id="msg2"></p>
+<p><b>Resultado:</b> <span id="res">Usuarios: 0 • Postulaciones: 0</span></p>
+</div>
+
+<script>
+let usuarios = JSON.parse(localStorage.getItem('usuarios')||'[]');
+let postulaciones = JSON.parse(localStorage.getItem('postulaciones')||'[]');
+function actualizar(){ document.getElementById('res').innerText = 'Usuarios: '+usuarios.length+' • Postulaciones: '+postulaciones.length; }
+function registrar(){
+  let n=document.getElementById('nombre').value, c=document.getElementById('correo').value, ca=document.getElementById('carrera').value, cl=document.getElementById('clave').value;
+  if(!n||!c||!ca||!cl){ document.getElementById('msg1').innerText='Faltan datos'; return; }
+  if(cl.length<6){ document.getElementById('msg1').innerText='CP-02: Contraseña corta - RECHAZADO'; return; }
+  if(usuarios.find(u=>u.correo==c)){ document.getElementById('msg1').innerText='CP-03: Correo duplicado - RECHAZADO'; return; }
+  usuarios.push({nombre:n,correo:c}); localStorage.setItem('usuarios',JSON.stringify(usuarios));
+  document.getElementById('msg1').innerText='CP-01: Registrado correctamente ✔'; actualizar();
+}
+function postular(v){
+  if(postulaciones.includes(v)){ document.getElementById('msg2').innerText='CP-06: Ya estás postulado - No se duplica'; return; }
+  postulaciones.push(v); localStorage.setItem('postulaciones',JSON.stringify(postulaciones));
+  document.getElementById('msg2').innerText='CP-05: Postulado a '+v+' ✔'; actualizar();
+}
+actualizar();
+</script>
+</body>
+</html>
